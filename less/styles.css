@@ -1,0 +1,41 @@
+#MainContainer {
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 0 auto;
+}
+#MainContainer h2 {
+  margin: 10px 0;
+}
+#MainContainer .pagina .titulo {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #EEEEEE;
+  border-radius: 10px;
+  text-align: center;
+}
+#MainContainer .pagina .cuerpo {
+  text-align: left;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+}
+#MainContainer .pagina .cuerpo h3 {
+  margin-top: 0;
+  padding: 10px 10px;
+  background-color: #EEEEEE;
+}
+#MainContainer .pagina .cuerpo > h3 {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+#MainContainer .pagina .cuerpo > h3 ~ h3 {
+  border-radius: 0;
+}
+#MainContainer .pagina .cuerpo .contenido {
+  padding: 10px 20px 20px;
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+#MainContainer .pagina .cuerpo img {
+  width: 70%;
+}

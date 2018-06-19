@@ -1,0 +1,166 @@
+<h2 class="titulo">Inicialización y boot</h2>
+<hr>
+<div class="cuerpo">
+    <h3>Que pasa cuando inicia el procesador</h3>
+    <div class="contenido">
+        <p>Tanto para su encendido (pin <b>#INIT</b>) o cuando se acitva su pin <b>#RESET</b></p>
+        <h4><b>Built in Self Test</b></h4>
+        <p>
+            Se ejecuta el (Test interno del procesador que se ejecuta luego de su encendido o se activa el pin #RESET).<br>            Si los tests pasan OK se setea <b>eax</b> = <b>0x0</b>.<br> Los otros regitros toman un valor determinado.<br>
+        </p>
+        <hr>
+        <h4>Se invalidan</h4>
+        <ul>
+            <li>Las memorias <b>caché</b> internas<br></li>
+            <li>las <b>TLB</b> (Translation Lookaside Buffers)</li>
+        </ul>
+        <hr>
+        <h4>Se limpian</h4>
+        <ul>
+            <li>
+                Los <b>Branch Target Buffers</b>
+            </li>
+        </ul>
+        <hr>
+        <h4>Valores iniciales</h4>
+        <div>
+            <h5>CR0</h5>
+            <img src="img/CRO-initialvalues.png">
+            <h5>Registros corrientes</h5>
+            <img src="img/registros-initialvalues.png">
+        </div>
+        <hr>
+        <h4>Reset Vector</h4>
+        <p>
+
+        </p>
+        <hr>
+        <h4>Selección del modo</h4>
+        <p>Hay 3 opciones:</p>
+        <ol>
+            <li>Modo <b>Real</b> (en este modo arranca)</li>
+            <li>Modo <b>Protegido Flat</b> (el tp es en este modo)</li>
+            <li>Modo <b>protegido Segmentado</b></li>
+        </ol>
+        <p>
+            (los modos 2 y 3 son variantes del modo Protegido, difieren en la forma en la que organizan el modelo de segmentación.)
+        </p>
+        <hr>
+        <h4>Inicialización de memoria</h4>
+        <p>
+            Es una caja negra, y es "plataforma dependiente".
+        </p>
+        <hr>
+        <h4>Inicialización <b>Post memoria</b></h4>
+        <p>
+            Consta de 5 pasos que el programador debe realizar:
+        </p>
+        <ol>
+            <li>
+                Memory test
+            </li>
+            <li>
+                Shadow Firmware
+            </li>
+            <li>
+                Memory Transaction Re-Direction
+            </li>
+            <li>
+                Configurar un Stack
+            </li>
+            <li>
+                Transferir control de programa a DRAM (aqui se hace el JMP:far, para este punto toda la configuracion del sistema debe estar
+                realizada)
+            </li>
+        </ol>
+        <hr>
+        <h4>Habilitaciones de dispositivos misclaneos</h4>
+        <p>
+            Estos items son "plataforma dependientes". Por lo que no será igual para todos los chipsets. Los mas comunes son:
+        </p>
+        <ul>
+            <li>Programacion del chip de reloj</li>
+            <li>GPIO (General purpose Input output)</li>
+        </ul>
+        <hr>
+        <h4>Habilitaciones de interrupciones</h4>
+        <p>
+            Se puede realizar con una o una combinación de los siguientes:
+        </p>
+        <ul>
+            <li>
+                Programmable Interrupt Controller (PIC)
+            </li>
+            <li>
+                Local Advanced Programmable Interrupt Controller (APIC)
+            </li>
+            <li>
+                Input/Output Advanced Programmable Interrupt Controlloer (IOxAPIC)
+            </li>
+            <li>
+                Messaged Signaled Interrupt (MSI)
+            </li>
+        </ul>
+    </div>
+
+    <h3>Pasaje a Modo Protegido</h3>
+    <div class="contenido">
+        <p>
+            habilitar el bit <b>PE</b> del registro <b>CR0</b> se pasa a modo protegido.<br> De todos modos debemos preparar
+            las estructuras mínimas para que el kernel pueda funcionar. Esto es:
+        </p>
+        <ul>
+            <li>
+                <p>
+                    <b>IDT</b> (Interruption Descriptor Table)<br> Donde se mapean las excepciones necesarias para operar
+                    el sistema y sus handlers. Tambien se mapean las interrupciones de hardware.
+                </p>
+            </li>
+            <li>
+                <p>
+                    <b>GDT</b> (Global Descriptor Table)<br> Donde se mapean los descriptores de código y datos.
+                </p>
+            </li>
+            <li>
+                <p>
+                    <b>GDTR</b> (Global Descriptor Table Register)<br> con la direccion base de la GDT y su tamaño.
+                </p>
+            </li>
+            <li>
+                <p>
+                    <b>IDTR</b> (Interruption Descriptor Table Register)<br> Equivalente al GDTR pero para la IDT, puede
+                    inicializarse antes o despues de pasar a modo protegido, pero siempre antes de habilitar las interrupciones.
+                </p>
+            </li>
+            <li>
+                <p>
+                    <b>TSS</b> (Task State Segment)<br> Por lo menos debe haber 1 TSS creada.
+                </p>
+            </li>
+            <li>
+                <p>
+                    (Opcional) <b>LDT</b> (Local Descriptor Table)
+                </p>
+            </li>
+            <li>
+                <p>
+                    <b>DTP</b> y <b>TP</b> (Directorio de Tablas de Pagina - Tabla de Paginas)<br> Si el sistema usare paginación,
+                    debe tener por lo menos un Directorio de Tabla de Paginas, con al menos una entrada válida a una Tabla
+                    de Paginas, que a su vez debe estar correctamente inicializada.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Un <b>Segmento de código</b> que contenga el código que vamos a ejecutar inmediatamente despues de pasar
+                    a modo protegido. Este segmento debe tener una entrada en la GDT.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Inicializar los <b>registros de control</b> del procesador<br> <b>CR3</b> con la dirección fisica del
+                    inicio del DTP.<br><b>CR4</b> con algún modo de paginación larga (en caso de querer utilizarse).
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>

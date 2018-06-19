@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <link rel="stylesheet" href="resources/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="less/styles.css">
+
+    <title>Resumen segundo parcial</title>
+</head>
+
+<body>
+    <div id="MainContainer" ng-app="mainApp" ng-controller="mainCtrl" class="container">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active">
+                <a data-toggle="tab" href="#Inicializacion">Inicialización y Boot</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#SegmentacionPaginacion">Segmentación y Paginación</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#Interrupciones">Interrupciones</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#Tareas">Tareas</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="Inicializacion" class="tab-pane fade in active">
+                <div ng-include="'1-pasaje_modo_protegido.html'" class="pagina"></div>
+            </div>
+            <div id="SegmentacionPaginacion" class="tab-pane fade">
+                <div ng-include="'2-segmentacion_paginacion.html'" class="pagina"></div>
+            </div>
+            <div id="Interrupciones" class="tab-pane fade">
+                <div ng-include="'3-interrupciones.html'" class="pagina"></div>
+            </div>
+            <div id="Tareas" class="tab-pane fade">
+                <div ng-include="'4-tareas.html'" class="pagina"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

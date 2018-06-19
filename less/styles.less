@@ -1,0 +1,50 @@
+#MainContainer {   
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0 auto;
+
+    h2 {
+        margin: 10px 0;
+    }
+
+    .pagina {
+        .titulo {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: #EEEEEE;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .cuerpo {
+            h3 {
+                margin-top: 0;
+                padding: 10px 10px;
+                background-color: #EEEEEE;
+            }
+
+            > h3 {
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+
+                ~ h3 {
+                    border-radius: 0;
+                }
+            }
+            .contenido {
+                padding: 10px 20px 20px;
+                margin-top: 20px;
+                margin-bottom: 35px;
+            }
+            
+            img {
+                width: 70%;
+            }
+            
+            text-align: left;
+            border: 1px solid #dddddd;
+            border-radius: 10px;
+        }
+    }
+}
